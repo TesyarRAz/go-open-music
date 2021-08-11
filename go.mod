@@ -9,6 +9,7 @@ require (
 	github.com/jackc/pgx/v4 v4.13.0 // indirect
 	github.com/joho/godotenv v1.3.0
 	github.com/json-iterator/go v1.1.11 // indirect
+	github.com/lestrrat-go/jwx v1.2.5
 	github.com/mattn/go-isatty v0.0.13 // indirect
 	github.com/ugorji/go v1.2.6 // indirect
 	google.golang.org/protobuf v1.27.1 // indirect
