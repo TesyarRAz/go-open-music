@@ -15,4 +15,5 @@ type User struct {
 	CreatedAt    time.Time      `json:"insertedAt"`
 	UpdatedAt    time.Time      `json:"updatedAt"`
 	Playlists    []*Playlist    `json:"playlists"`
+	AllPlaylists []*Playlist    `json:"allPlaylists" gorm:"many2many:playlists_users"`
 }

@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/TesyarRAz/go-open-music/model"
+	"github.com/TesyarRAz/go-open-music/policy"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
@@ -15,9 +16,9 @@ type PlaylistController struct {
 func (p *PlaylistController) Index(c *gin.Context) {
 	user := c.MustGet("user").(*model.User)
 
-	var playlists []model.Playlist
+	playlists, err := userPlaylists(p.Db, user)
 
-	if err := p.Db.Preload("User").Find(&playlists, "user_id = ?", user.ID).Error; err != nil {
+	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"status":  "fail",
 			"message": err.Error(),
@@ -71,7 +72,7 @@ func (p *PlaylistController) Destroy(c *gin.Context) {
 
 	var playlist model.Playlist
 
-	if err := p.Db.Preload("User").First(&playlist, "id = ?", playlistId).Error; err != nil {
+	if err := p.Db.Preload("Users").First(&playlist, "id = ?", playlistId).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{
 			"status":  "fail",
 			"message": err.Error(),
@@ -79,7 +80,8 @@ func (p *PlaylistController) Destroy(c *gin.Context) {
 		return
 	}
 
-	if playlist.UserID != user.ID {
+	// Mengecek hanya user pembuat yang bisa menghapus
+	if user.ID != playlist.UserID {
 		c.JSON(http.StatusForbidden, gin.H{
 			"status":  "fail",
 			"message": "playlist orang ini woe",
@@ -112,7 +114,7 @@ func (p *PlaylistController) StoreSong(c *gin.Context) {
 		song     model.Song
 	)
 
-	if err := p.Db.First(&playlist, "id = ?", playlistId).Error; err != nil {
+	if err := p.Db.Preload("Users").First(&playlist, "id = ?", playlistId).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{
 			"status":  "fail",
 			"message": err.Error(),
@@ -128,7 +130,10 @@ func (p *PlaylistController) StoreSong(c *gin.Context) {
 		return
 	}
 
-	if playlist.UserID != user.ID {
+	policy := policy.PlaylistPolicy{Playlist: &playlist}
+
+	// Mengecek apakah user itu bisa mengakses playlistnya
+	if !policy.CanAccess(user) {
 		c.JSON(http.StatusForbidden, gin.H{
 			"status":  "fail",
 			"message": "playlist orang ini woe",
@@ -166,7 +171,7 @@ func (p *PlaylistController) ShowSong(c *gin.Context) {
 
 	var playlist model.Playlist
 
-	if err := p.Db.Preload("Songs").Preload("User").First(&playlist, "id = ?", playlistId).Error; err != nil {
+	if err := p.Db.Preload("Songs").Preload("Users").First(&playlist, "id = ?", playlistId).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{
 			"status":  "fail",
 			"message": err.Error(),
@@ -174,7 +179,10 @@ func (p *PlaylistController) ShowSong(c *gin.Context) {
 		return
 	}
 
-	if playlist.UserID != user.ID {
+	policy := policy.PlaylistPolicy{Playlist: &playlist}
+
+	// Mengecek apakah user itu bisa mengakses playlistnya
+	if !policy.CanAccess(user) {
 		c.JSON(http.StatusForbidden, gin.H{
 			"status":  "fail",
 			"message": "playlist orang ini woe",
@@ -201,7 +209,7 @@ func (p *PlaylistController) DestroySong(c *gin.Context) {
 		song     model.Song
 	)
 
-	if err := p.Db.Preload("User").First(&playlist, "id = ?", playlistId).Error; err != nil {
+	if err := p.Db.Preload("Users").First(&playlist, "id = ?", playlistId).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{
 			"status":  "fail",
 			"message": err.Error(),
@@ -217,7 +225,10 @@ func (p *PlaylistController) DestroySong(c *gin.Context) {
 		return
 	}
 
-	if playlist.UserID != user.ID {
+	policy := policy.PlaylistPolicy{Playlist: &playlist}
+
+	// Mengecek apakah user itu bisa mengakses playlistnya
+	if !policy.CanAccess(user) {
 		c.JSON(http.StatusForbidden, gin.H{
 			"status":  "fail",
 			"message": "playlist orang ini woe",

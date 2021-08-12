@@ -8,7 +8,7 @@ import (
 )
 
 func indexResponse(playlists []model.Playlist) interface{} {
-	var resources []gin.H
+	resources := make([]gin.H, 0)
 
 	for _, s := range playlists {
 		resources = append(resources, gin.H{

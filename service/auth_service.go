@@ -1,7 +1,6 @@
 package service
 
 import (
-	"log"
 	"strings"
 	"time"
 
@@ -67,8 +66,6 @@ func CreateToken(user model.User) (string, string, error) {
 
 func ValidateAuthorization(authorization string) (jwt.Token, error) {
 	token := strings.TrimSpace(strings.TrimPrefix(authorization, "Bearer"))
-
-	log.Println(token)
 
 	return ValidateToken(token)
 }

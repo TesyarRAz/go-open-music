@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/TesyarRAz/go-open-music/config"
+	"github.com/TesyarRAz/go-open-music/controller/collab"
 	"github.com/TesyarRAz/go-open-music/controller/playlist"
 	"github.com/TesyarRAz/go-open-music/controller/song"
 	"github.com/TesyarRAz/go-open-music/controller/user"
@@ -24,6 +25,7 @@ func main() {
 	songController := song.SongController{Db: db}
 	userController := user.UserController{Db: db}
 	playlistController := playlist.PlaylistController{Db: db}
+	collabController := collab.CollabController{Db: db}
 
 	authMiddleware := middleware.AuthMiddleware{Db: db}
 
@@ -46,6 +48,9 @@ func main() {
 		auth.GET("/playlists/:playlistId/songs", playlistController.ShowSong)
 		auth.POST("/playlists/:playlistId/songs", playlistController.StoreSong)
 		auth.DELETE("/playlists/:playlistId/songs", playlistController.DestroySong)
+
+		auth.POST("/collaborations", collabController.Store)
+		auth.DELETE("/collaborations", collabController.Destroy)
 	}
 
 	r.Run(":5000")

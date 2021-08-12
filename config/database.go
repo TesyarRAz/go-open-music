@@ -17,6 +17,7 @@ func NewDatabase() *gorm.DB {
 	}
 
 	db.Migrator().DropTable("playlist_songs")
+	db.Migrator().DropTable(&model.PlaylistUser{})
 	db.Migrator().DropTable(&model.Playlist{})
 	db.Migrator().DropTable(&model.Song{})
 	db.Migrator().DropTable(&model.User{})
@@ -24,6 +25,15 @@ func NewDatabase() *gorm.DB {
 	db.AutoMigrate(&model.User{})
 	db.AutoMigrate(&model.Song{})
 	db.AutoMigrate(&model.Playlist{})
+	db.AutoMigrate(&model.PlaylistUser{})
+
+	if err := db.SetupJoinTable(&model.Playlist{}, "Users", &model.PlaylistUser{}); err != nil {
+		panic(err.Error())
+	}
+
+	if err := db.SetupJoinTable(&model.User{}, "AllPlaylists", &model.PlaylistUser{}); err != nil {
+		panic(err.Error())
+	}
 
 	return db
 }
