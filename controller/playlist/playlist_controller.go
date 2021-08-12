@@ -87,15 +87,6 @@ func (p *PlaylistController) Destroy(c *gin.Context) {
 		return
 	}
 
-	if err := p.Db.Model(&playlist).Association("Songs").Clear(); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"status":  "fail",
-			"message": err.Error(),
-		})
-
-		return
-	}
-
 	if err := p.Db.Delete(&playlist).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"status":  "fail",
