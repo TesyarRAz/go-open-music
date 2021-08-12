@@ -16,12 +16,6 @@ func NewDatabase() *gorm.DB {
 		panic(err.Error())
 	}
 
-	db.Migrator().DropTable("playlist_songs")
-	db.Migrator().DropTable(&model.PlaylistUser{})
-	db.Migrator().DropTable(&model.Playlist{})
-	db.Migrator().DropTable(&model.Song{})
-	db.Migrator().DropTable(&model.User{})
-
 	db.AutoMigrate(&model.User{})
 	db.AutoMigrate(&model.Song{})
 	db.AutoMigrate(&model.Playlist{})
