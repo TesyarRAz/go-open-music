@@ -2,11 +2,11 @@ package main
 
 import (
 	"github.com/TesyarRAz/go-open-music/config"
-	"github.com/TesyarRAz/go-open-music/controller/collab"
-	"github.com/TesyarRAz/go-open-music/controller/playlist"
-	"github.com/TesyarRAz/go-open-music/controller/song"
-	"github.com/TesyarRAz/go-open-music/controller/user"
 	"github.com/TesyarRAz/go-open-music/middleware"
+	"github.com/TesyarRAz/go-open-music/module/collab"
+	"github.com/TesyarRAz/go-open-music/module/playlist"
+	"github.com/TesyarRAz/go-open-music/module/song"
+	"github.com/TesyarRAz/go-open-music/module/user"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 )

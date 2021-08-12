@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	"github.com/TesyarRAz/go-open-music/model"
-	"github.com/TesyarRAz/go-open-music/policy"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
@@ -130,7 +129,7 @@ func (p *PlaylistController) StoreSong(c *gin.Context) {
 		return
 	}
 
-	policy := policy.PlaylistPolicy{Playlist: &playlist}
+	policy := PlaylistPolicy{Playlist: &playlist}
 
 	// Mengecek apakah user itu bisa mengakses playlistnya
 	if !policy.CanAccess(user) {
@@ -179,7 +178,7 @@ func (p *PlaylistController) ShowSong(c *gin.Context) {
 		return
 	}
 
-	policy := policy.PlaylistPolicy{Playlist: &playlist}
+	policy := PlaylistPolicy{Playlist: &playlist}
 
 	// Mengecek apakah user itu bisa mengakses playlistnya
 	if !policy.CanAccess(user) {
@@ -225,7 +224,7 @@ func (p *PlaylistController) DestroySong(c *gin.Context) {
 		return
 	}
 
-	policy := policy.PlaylistPolicy{Playlist: &playlist}
+	policy := PlaylistPolicy{Playlist: &playlist}
 
 	// Mengecek apakah user itu bisa mengakses playlistnya
 	if !policy.CanAccess(user) {
