@@ -82,7 +82,7 @@ func (s *SongController) Update(c *gin.Context) {
 
 	var (
 		song    model.Song
-		newSong UpdateRequest
+		newSong updateRequest
 	)
 
 	if err := s.Db.First(&song, "id = ?", songId).Error; err != nil {
@@ -141,6 +141,5 @@ func (s *SongController) Destroy(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"status":  "success",
 		"message": "Berhasil menghapus lagu",
-		"data":    song,
 	})
 }

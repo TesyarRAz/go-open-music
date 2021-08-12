@@ -17,6 +17,16 @@ func (a *AuthMiddleware) Auth(c *gin.Context) {
 	token, err := service.ValidateAuthorization(c.GetHeader("Authorization"))
 
 	if err != nil {
+		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
+			"status":  "fail",
+			"message": "unauthorized",
+			"error":   err.Error(),
+		})
+
+		return
+	}
+
+	if token == nil {
 		c.JSON(http.StatusUnauthorized, gin.H{
 			"status":  "fail",
 			"message": "unauthorized",
@@ -27,17 +37,19 @@ func (a *AuthMiddleware) Auth(c *gin.Context) {
 	userId, ok := token.Get("userId")
 
 	if !ok {
-		c.JSON(http.StatusUnauthorized, gin.H{
+		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
 			"status":  "fail",
 			"message": "unauthorized",
 			"error":   err.Error(),
 		})
+
+		return
 	}
 
 	var user model.User
 
 	if err := a.Db.First(&user, "id = ?", userId).Error; err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{
+		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
 			"status":  "fail",
 			"message": err.Error(),
 		})

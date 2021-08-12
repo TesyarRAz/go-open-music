@@ -14,7 +14,7 @@ func indexResponse(playlists []model.Playlist) interface{} {
 		resources = append(resources, gin.H{
 			"id":       strconv.Itoa(s.ID),
 			"name":     s.Name,
-			"username": s.UserName,
+			"username": s.User.Username,
 		})
 	}
 
@@ -25,4 +25,18 @@ func storeResponse(playlist model.Playlist) interface{} {
 	return gin.H{
 		"playlistId": strconv.Itoa(playlist.ID),
 	}
+}
+
+func showResponse(playlist model.Playlist) interface{} {
+	var resources []gin.H
+
+	for _, s := range playlist.Songs {
+		resources = append(resources, gin.H{
+			"id":        strconv.Itoa(s.ID),
+			"title":     s.Title,
+			"performer": s.Performer,
+		})
+	}
+
+	return resources
 }

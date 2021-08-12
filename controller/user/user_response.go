@@ -15,13 +15,13 @@ func storeResponse(user model.User) interface{} {
 
 func loginResponse(user model.User) interface{} {
 	return gin.H{
-		"accessToken":  user.AccessToken,
-		"refreshToken": user.RefreshToken,
+		"accessToken":  user.AccessToken.String,
+		"refreshToken": user.RefreshToken.String,
 	}
 }
 
 func refreshResponse(user model.User) interface{} {
 	return gin.H{
-		"accessToken": user.AccessToken,
+		"accessToken": user.AccessToken.String,
 	}
 }

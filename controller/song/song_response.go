@@ -55,7 +55,7 @@ func showResponse(song model.Song) interface{} {
 	}
 }
 
-func updateResponse(song UpdateRequest) interface{} {
+func updateResponse(song updateRequest) interface{} {
 	return struct {
 		ID        int       `json:"id"`
 		Title     string    `json:"title" binding:"required"`

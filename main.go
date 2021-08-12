@@ -36,12 +36,16 @@ func main() {
 	r.POST("/users", userController.Store)
 	r.POST("/authentications", userController.Login)
 	r.PUT("/authentications", userController.Refresh)
+	r.DELETE("/authentications", userController.DestroyToken)
 
 	auth := r.Group("/", authMiddleware.Auth)
 	{
 		auth.GET("/playlists", playlistController.Index)
 		auth.POST("/playlists", playlistController.Store)
-		auth.POST("/playlists/{playlistId}/songs", playlistController.StoreSong)
+		auth.DELETE("/playlists/:playlistId", playlistController.Destroy)
+		auth.GET("/playlists/:playlistId/songs", playlistController.ShowSong)
+		auth.POST("/playlists/:playlistId/songs", playlistController.StoreSong)
+		auth.DELETE("/playlists/:playlistId/songs", playlistController.DestroySong)
 	}
 
 	r.Run(":5000")

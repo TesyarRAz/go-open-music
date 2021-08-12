@@ -74,7 +74,8 @@ func ValidateAuthorization(authorization string) (jwt.Token, error) {
 }
 
 func ValidateToken(token string) (jwt.Token, error) {
-	return jwt.ParseString(token, jwt.WithVerify(jwa.SignatureAlgorithm(config.AppConfig.JWT_ENCRYPT), config.AppConfig.JWT_SECRET),
+	return jwt.ParseString(token,
+		jwt.WithVerify(jwa.SignatureAlgorithm(config.AppConfig.JWT_ENCRYPT), config.AppConfig.JWT_SECRET),
 		jwt.WithValidate(true),
 		jwt.WithAcceptableSkew(time.Duration(time.Now().Unix())),
 	)

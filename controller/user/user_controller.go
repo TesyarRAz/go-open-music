@@ -1,6 +1,7 @@
 package user
 
 import (
+	"database/sql"
 	"net/http"
 
 	"github.com/TesyarRAz/go-open-music/model"
@@ -43,7 +44,7 @@ func (u *UserController) Store(c *gin.Context) {
 
 func (u *UserController) Login(c *gin.Context) {
 	var (
-		request LoginRequest
+		request loginRequest
 		user    model.User
 	)
 
@@ -76,8 +77,8 @@ func (u *UserController) Login(c *gin.Context) {
 		return
 	}
 
-	user.AccessToken = accessToken
-	user.RefreshToken = refreshToken
+	user.AccessToken = sql.NullString{String: accessToken, Valid: true}
+	user.RefreshToken = sql.NullString{String: refreshToken, Valid: true}
 
 	if err := u.Db.Save(&user).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -97,7 +98,7 @@ func (u *UserController) Login(c *gin.Context) {
 
 func (u *UserController) Refresh(c *gin.Context) {
 	var (
-		request RefreshRequest
+		request refreshRequest
 		user    model.User
 	)
 
@@ -112,7 +113,7 @@ func (u *UserController) Refresh(c *gin.Context) {
 
 	token, err := service.ValidateToken(request.RefreshToken)
 	if err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{
+		c.JSON(http.StatusBadRequest, gin.H{
 			"status":  "fail",
 			"message": "unauthorized",
 			"error":   err.Error(),
@@ -150,8 +151,8 @@ func (u *UserController) Refresh(c *gin.Context) {
 		return
 	}
 
-	user.AccessToken = accessToken
-	if err := u.Db.Model(&user).Update("accessToken = ?", user.AccessToken).Error; err != nil {
+	user.AccessToken = sql.NullString{String: accessToken, Valid: true}
+	if err := u.Db.Model(&user).Update("access_token", user.AccessToken).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"status":  "fail",
 			"message": err.Error(),
@@ -163,6 +164,68 @@ func (u *UserController) Refresh(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"status":  "success",
 		"data":    refreshResponse(user),
+		"message": "Berhasil refresh token",
+	})
+}
+
+func (u *UserController) DestroyToken(c *gin.Context) {
+	var (
+		request refreshRequest
+		user    model.User
+	)
+
+	if err := c.ShouldBindJSON(&request); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status":  "fail",
+			"message": err.Error(),
+		})
+
+		return
+	}
+
+	token, err := service.ValidateToken(request.RefreshToken)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status":  "fail",
+			"message": "unauthorized",
+			"error":   err.Error(),
+		})
+		return
+	}
+
+	userId, ok := token.Get("userId")
+
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"status":  "fail",
+			"message": "unauthorized",
+		})
+
+		return
+	}
+
+	if err := u.Db.First(&user, "id = ?", userId).Error; err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"status":  "fail",
+			"message": "unauthorized",
+		})
+		return
+	}
+
+	user.AccessToken = sql.NullString{}
+	user.RefreshToken = sql.NullString{}
+
+	if err := u.Db.Save(&user).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status":  "fail",
+			"message": err.Error(),
+		})
+
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"status":  "success",
 		"message": "Berhasil refresh token",
 	})
 }

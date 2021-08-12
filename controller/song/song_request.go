@@ -2,7 +2,7 @@ package song
 
 import "time"
 
-type UpdateRequest struct {
+type updateRequest struct {
 	ID        int       `json:"id"`
 	Title     string    `json:"title" binding:"required"`
 	Year      string    `json:"year" binding:"required"`
