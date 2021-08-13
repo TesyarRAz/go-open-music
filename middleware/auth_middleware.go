@@ -14,7 +14,7 @@ type AuthMiddleware struct {
 }
 
 func (a *AuthMiddleware) Auth(c *gin.Context) {
-	token, err := service.ValidateAuthorization(c.GetHeader("Authorization"))
+	token, err := service.Auth.ValidateAuthorization(c.GetHeader("Authorization"))
 
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{

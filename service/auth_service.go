@@ -10,12 +10,14 @@ import (
 	"github.com/lestrrat-go/jwx/jwt"
 )
 
+type authService struct{}
+
 const (
 	ACCESS_TOKEN_EXP  = time.Minute * 30   // 30 Menit
 	REFRESH_TOKEN_EXP = time.Hour * 24 * 7 // 1 Minggu
 )
 
-func CreateAccessToken(user model.User) (string, error) {
+func (authService) CreateAccessToken(user model.User) (string, error) {
 	token := jwt.New()
 
 	token.Set("authorized", true)
@@ -33,7 +35,7 @@ func CreateAccessToken(user model.User) (string, error) {
 	return string(serialized), err
 }
 
-func CreateRefreshToken(user model.User) (string, error) {
+func (authService) CreateRefreshToken(user model.User) (string, error) {
 	token := jwt.New()
 
 	token.Set("userId", user.ID)
@@ -50,13 +52,13 @@ func CreateRefreshToken(user model.User) (string, error) {
 	return string(serialized), err
 }
 
-func CreateToken(user model.User) (string, string, error) {
-	accessToken, err := CreateAccessToken(user)
+func (s authService) CreateToken(user model.User) (string, string, error) {
+	accessToken, err := s.CreateAccessToken(user)
 	if err != nil {
 		return "", "", err
 	}
 
-	refreshToken, err := CreateRefreshToken(user)
+	refreshToken, err := s.CreateRefreshToken(user)
 	if err != nil {
 		return "", "", err
 	}
@@ -64,13 +66,13 @@ func CreateToken(user model.User) (string, string, error) {
 	return accessToken, refreshToken, err
 }
 
-func ValidateAuthorization(authorization string) (jwt.Token, error) {
+func (s authService) ValidateAuthorization(authorization string) (jwt.Token, error) {
 	token := strings.TrimSpace(strings.TrimPrefix(authorization, "Bearer"))
 
-	return ValidateToken(token)
+	return s.ValidateToken(token)
 }
 
-func ValidateToken(token string) (jwt.Token, error) {
+func (authService) ValidateToken(token string) (jwt.Token, error) {
 	return jwt.ParseString(token,
 		jwt.WithVerify(jwa.SignatureAlgorithm(config.AppConfig.JWT_ENCRYPT), config.AppConfig.JWT_SECRET),
 		jwt.WithValidate(true),

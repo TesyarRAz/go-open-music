@@ -66,7 +66,7 @@ func (u *UserController) Login(c *gin.Context) {
 		return
 	}
 
-	accessToken, refreshToken, err := service.CreateToken(user)
+	accessToken, refreshToken, err := service.Auth.CreateToken(user)
 
 	if err != nil {
 		c.JSON(http.StatusUnprocessableEntity, gin.H{
@@ -111,7 +111,7 @@ func (u *UserController) Refresh(c *gin.Context) {
 		return
 	}
 
-	token, err := service.ValidateToken(request.RefreshToken)
+	token, err := service.Auth.ValidateToken(request.RefreshToken)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"status":  "fail",
@@ -140,7 +140,7 @@ func (u *UserController) Refresh(c *gin.Context) {
 		return
 	}
 
-	accessToken, err := service.CreateAccessToken(user)
+	accessToken, err := service.Auth.CreateAccessToken(user)
 
 	if err != nil {
 		c.JSON(http.StatusUnprocessableEntity, gin.H{
@@ -183,7 +183,7 @@ func (u *UserController) DestroyToken(c *gin.Context) {
 		return
 	}
 
-	token, err := service.ValidateToken(request.RefreshToken)
+	token, err := service.Auth.ValidateToken(request.RefreshToken)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"status":  "fail",
