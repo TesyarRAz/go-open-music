@@ -4,8 +4,8 @@ import (
 	"database/sql"
 	"net/http"
 
-	"github.com/TesyarRAz/go-open-music/model"
-	"github.com/TesyarRAz/go-open-music/service"
+	"github.com/TesyarRAz/go-open-music/internal/pkg/model"
+	"github.com/TesyarRAz/go-open-music/internal/pkg/service"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )

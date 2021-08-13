@@ -1,5 +1,6 @@
 /tmp
 /build/*
+/vendor
 .env
 .air.toml
 .vscode

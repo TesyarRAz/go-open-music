@@ -4,8 +4,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/TesyarRAz/go-open-music/config"
-	"github.com/TesyarRAz/go-open-music/model"
+	"github.com/TesyarRAz/go-open-music/internal/pkg/config"
+	"github.com/TesyarRAz/go-open-music/internal/pkg/model"
 	"github.com/lestrrat-go/jwx/jwa"
 	"github.com/lestrrat-go/jwx/jwt"
 )

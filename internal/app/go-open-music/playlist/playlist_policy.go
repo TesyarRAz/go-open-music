@@ -1,6 +1,6 @@
 package playlist
 
-import "github.com/TesyarRAz/go-open-music/model"
+import "github.com/TesyarRAz/go-open-music/internal/pkg/model"
 
 type PlaylistPolicy struct {
 	Playlist *model.Playlist

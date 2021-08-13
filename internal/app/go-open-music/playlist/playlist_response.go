@@ -3,7 +3,7 @@ package playlist
 import (
 	"strconv"
 
-	"github.com/TesyarRAz/go-open-music/model"
+	"github.com/TesyarRAz/go-open-music/internal/pkg/model"
 	"github.com/gin-gonic/gin"
 )
 

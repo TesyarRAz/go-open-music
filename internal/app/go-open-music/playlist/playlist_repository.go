@@ -1,7 +1,7 @@
 package playlist
 
 import (
-	"github.com/TesyarRAz/go-open-music/model"
+	"github.com/TesyarRAz/go-open-music/internal/pkg/model"
 	"gorm.io/gorm"
 )
 

@@ -1,17 +1,17 @@
-package main
+package goopenmusic
 
 import (
-	"github.com/TesyarRAz/go-open-music/config"
-	"github.com/TesyarRAz/go-open-music/middleware"
-	"github.com/TesyarRAz/go-open-music/module/collab"
-	"github.com/TesyarRAz/go-open-music/module/playlist"
-	"github.com/TesyarRAz/go-open-music/module/song"
-	"github.com/TesyarRAz/go-open-music/module/user"
+	"github.com/TesyarRAz/go-open-music/internal/app/go-open-music/collab"
+	"github.com/TesyarRAz/go-open-music/internal/app/go-open-music/playlist"
+	"github.com/TesyarRAz/go-open-music/internal/app/go-open-music/song"
+	"github.com/TesyarRAz/go-open-music/internal/app/go-open-music/user"
+	"github.com/TesyarRAz/go-open-music/internal/pkg/config"
+	"github.com/TesyarRAz/go-open-music/internal/pkg/middleware"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 )
 
-func main() {
+func Run() {
 	r := gin.Default()
 
 	if err := godotenv.Load(); err != nil {
