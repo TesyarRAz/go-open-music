@@ -27,6 +27,10 @@ func NewDatabase() *gorm.DB {
 		panic(err.Error())
 	}
 
+	if d, err := db.DB(); err == nil {
+		d.SetMaxIdleConns(10)
+		d.SetMaxOpenConns(100)
+	}
 	db.AutoMigrate(&model.User{})
 	db.AutoMigrate(&model.Song{})
 	db.AutoMigrate(&model.Playlist{})
